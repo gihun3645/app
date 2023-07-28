@@ -12,22 +12,14 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
 
-    private ListView list;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_nav);
 
-        list = (ListView) findViewById(R.id.list);
 
-        List<String> data = new ArrayList<>();
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, data);
-        list.setAdapter(adapter);
-
-        data.add("Hello World!");
-        data.add("this is app");
-        adapter.notifyDataSetChanged();
+        // Nav 클래스 시작
+        Intent intent = new Intent(this, Nav.class);
+        startActivity(intent);
     }
 }
