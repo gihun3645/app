@@ -1,8 +1,9 @@
 package com.example.app;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.view.View;
+import android.view.KeyEvent;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,31 +13,41 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText et_save;
-    String shared = "file";
+    private WebView webView;
+    private String url = "https://gihun-blog.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        et_save = (EditText)findViewById(R.id.et_save);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(shared, 0);
-        String value = sharedPreferences.getString("송바래", "");
-        et_save.setText(value);
+        webView = (WebView) findViewById(R.id.webView);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadUrl(url);
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebViewClient(new WebViewClientClass());
+
+
     }
 
-    // 생명주기를 하나 더 생성
-    // 액티비티가 종료될 때 실행하는 것
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
 
-        SharedPreferences sharedPreferences = getSharedPreferences(shared, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        String value = et_save.getText().toString();
-        editor.putString("송바래", value);
-        editor.commit();
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+
+            webView.goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private class WebViewClientClass extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
     }
 }
